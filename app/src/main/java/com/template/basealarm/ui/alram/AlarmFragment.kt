@@ -1,31 +1,28 @@
-package com.template.basealarm.ui
+package com.template.basealarm.ui.alram
 
 import android.app.AlarmManager
 import android.app.PendingIntent
-import android.app.TimePickerDialog
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.CalendarView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.michaldrabik.classicmaterialtimepicker.CmtpTimeDialogFragment
 import com.michaldrabik.classicmaterialtimepicker.utilities.setOnTime24PickedListener
 import com.template.basealarm.R
 import com.template.basealarm.databinding.FragmentAlarmBinding
-import com.template.basealarm.util.event.Message
-import com.template.basealarm.util.event.MessageEvent
 import com.template.calenderproject.service.ServiceAutoLauncher
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
+import ir.hamsaa.persiandatepicker.PersianDatePickerDialog
+import ir.hamsaa.persiandatepicker.api.PersianPickerDate
+import ir.hamsaa.persiandatepicker.api.PersianPickerListener
+
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.Calendar.PM
+import kotlin.collections.ArrayList
+
 
 class AlarmFragment : Fragment(R.layout.fragment_alarm) {
     private var alarmYear = 0
@@ -33,16 +30,17 @@ class AlarmFragment : Fragment(R.layout.fragment_alarm) {
     private var alarmDay = 0
     private var alarmHour = 0
     private var alarmMinute = 0
+    lateinit var id: ArrayList<Int>
     lateinit var binding: FragmentAlarmBinding
-
+    private var picker: PersianDatePickerDialog? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding = FragmentAlarmBinding.bind(view)
         super.onViewCreated(view, savedInstanceState)
+        id = ArrayList()
+        Log.e("GGG", "onViewCreated: ${id.size}", )
 
-        if (!EventBus().isRegistered(this)) {
-            EventBus().register(this)
-        }
+
 
         initVariables()
 
@@ -51,53 +49,81 @@ class AlarmFragment : Fragment(R.layout.fragment_alarm) {
             setAlarms()
 
         }
-
-
         binding.btnDate.setOnClickListener {
-            setUpBottomSheetPay()
+            picker = PersianDatePickerDialog(requireContext())
+                .setPositiveButtonString("باشه")
+                .setNegativeButton("بیخیال")
+                .setTodayButton("امروز")
+                .setTodayButtonVisible(true)
+                .setMinYear(1300)
+                .setAllButtonsTextSize(12)
+                .setMaxYear(PersianDatePickerDialog.THIS_YEAR)
+                .setInitDate(alarmYear, alarmMonth, alarmDay)
+                .setActionTextColor(Color.GRAY)
+                .setTitleType(PersianDatePickerDialog.WEEKDAY_DAY_MONTH_YEAR)
+                .setShowInBottomSheet(true)
+                .setListener(object : PersianPickerListener {
+                    override fun onDateSelected(persianPickerDate: PersianPickerDate) {
+
+
+                        alarmYear = persianPickerDate.gregorianYear
+                        alarmMonth = persianPickerDate.gregorianMonth - 1
+                        alarmDay = persianPickerDate.gregorianDay
+
+
+
+                        Log.e(
+                            "TAG",
+                            "onDateSelected: ${persianPickerDate.gregorianDay}  -   ${persianPickerDate.gregorianMonth}  -  ${persianPickerDate.gregorianYear}",
+                        )
+
+                        Toast.makeText(
+                            requireContext(),
+                            persianPickerDate.persianYear.toString() + "/" + persianPickerDate.persianMonth + "/" + persianPickerDate.persianDay,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+
+                    override fun onDismissed() {
+                        Toast.makeText(requireContext(), "Dismissed", Toast.LENGTH_SHORT).show()
+                    }
+                })
+
+            picker!!.show()
         }
 
         binding.btnTime.setOnClickListener {
-//            val calendar = Calendar.getInstance()
-//            val hour = calendar[Calendar.HOUR_OF_DAY]
-//            val minute = calendar[Calendar.MINUTE]
-//            val timePickerDialog = TimePickerDialog(
-//                requireContext(),
-//                { view, hourOfDay, minute ->
-//                    val aCal = Calendar.getInstance()
-//                    aCal.timeZone = TimeZone.getDefault()
-//                    aCal[Calendar.HOUR_OF_DAY] = hourOfDay
-//                    aCal[Calendar.MINUTE] = minute
-//                    val simpleDateFormat = SimpleDateFormat("K:mm a", Locale.ENGLISH)
-//                    alarmHour = hourOfDay
-//                    alarmMinute = minute
-//                }, hour, minute, false
-//            )
-//            timePickerDialog.show()
             val dialog = CmtpTimeDialogFragment.newInstance()
             dialog.setInitialTime24(23, 30)
             dialog.setOnTime24PickedListener {
                 alarmHour = it.hour
                 alarmMinute = it.minute
-                binding.txtTime.text="${it.hour} - ${it.minute} "
+                binding.txtTime.text = "${it.hour} - ${it.minute} "
+                Log.e("TAG", "onViewCreated: ${it.hour} - ${it.minute} ")
             }
             dialog.show(requireActivity().supportFragmentManager, "TimePicker")
+
 
         }
 
     }
 
     private fun setAlarms() {
+        Log.e("TAG", "setAlarms:${alarmMonth} ")
         val calendar = Calendar.getInstance()
         calendar[alarmYear, alarmMonth] = alarmDay
         calendar[Calendar.HOUR_OF_DAY] = alarmHour
         calendar[Calendar.MINUTE] = alarmMinute
         calendar[Calendar.SECOND] = 0
+        id.add(1)
 
         val intent = Intent(requireContext(), ServiceAutoLauncher::class.java)
-        val pendingIntent = PendingIntent.getBroadcast(requireContext(), 0, intent, 0)
+        val pendingIntent = PendingIntent.getBroadcast(requireContext(), id.size + 1, intent, 0)
         val alarmManager =
             requireContext().getSystemService(AppCompatActivity.ALARM_SERVICE) as AlarmManager
+
+           // calendar.add(Calendar.MINUTE ,-2)
+
         alarmManager.setExactAndAllowWhileIdle(
             AlarmManager.RTC_WAKEUP,
             calendar.timeInMillis,
@@ -119,9 +145,12 @@ class AlarmFragment : Fragment(R.layout.fragment_alarm) {
         alarmMonth = mCal[Calendar.MONTH]
         alarmDay = mCal[Calendar.DAY_OF_MONTH]
 
+
+
+
         Log.e(
             "Details",
-            "initVariables:   hour : $alarmHour  minute : $alarmMinute   Year : $alarmYear  Month : $alarmMonth  Day: $alarmDay  "
+            "initVariables:   hour : $alarmHour  minute : $alarmMinute   Year : $alarmYear  Month : ${mCal[Calendar.MONTH]} Day: $alarmDay  "
         )
 
         //for date
@@ -138,43 +167,11 @@ class AlarmFragment : Fragment(R.layout.fragment_alarm) {
     }
 
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onMessageEvent(messageEvent: MessageEvent) {
-        binding.txtDate.text = messageEvent.message
-        Log.e("TAG", "onMessageEvent: ${messageEvent.message}")
-    }
 
 
-    private fun setUpBottomSheetPay() {
-        val dialogSheet = BottomSheetDialog(requireContext(), R.style.BottomSheetDialog)
-        val view = layoutInflater.inflate(R.layout.fragment_calender, null)
-        var calender = view.findViewById<CalendarView>(R.id.main_Calender)
-        calender.setOnDateChangeListener(CalendarView.OnDateChangeListener { view, year, month, dayOfMonth ->
-            alarmYear = year
-            alarmMonth = month
-            alarmDay = dayOfMonth
-            EventBus.getDefault().post(MessageEvent("$dayOfMonth-$month-$year"));
-            dialogSheet.dismiss()
-        })
-        dialogSheet.setContentView(view)
-        dialogSheet.show()
 
 
-    }
 
 
-    override fun onStart() {
-        super.onStart()
-        EventBus.getDefault().register(this)
-    }
 
-    override fun onStop() {
-        super.onStop()
-        EventBus.getDefault().unregister(this)
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        EventBus.getDefault().unregister(this);
-    }
 }

@@ -13,6 +13,6 @@
         android:label="CalFragment" />
     <fragment
         android:id="@+id/alarmFragment"
-        android:name="com.template.basealarm.ui.AlarmFragment"
+        android:name="com.template.basealarm.ui.alram.AlarmFragment"
         android:label="AlarmFragment" />
 </navigation>

@@ -12,6 +12,7 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.template.basealarm.MainActivity
 import com.template.basealarm.R
+import com.template.basealarm.showNotificationWithFullScreenIntent
 
 import java.util.*
 import javax.security.auth.login.LoginException
@@ -41,7 +42,8 @@ class AlarmService :Service() {
 //            interval = bundle!!.getString("interval", "")
 //            notificationId = bundle!!.getInt("notificationId", 0)
 //            soundName = bundle!!.getString("soundName", "Consequence")
-            showNotification()
+           // showNotification()
+            showNotificationWithFullScreenIntent()
             Log.e("Show", "onStartCommand: ", )
             //setNewAlarm()
         }

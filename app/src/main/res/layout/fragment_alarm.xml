@@ -6,64 +6,106 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView_AlartF_details"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/frameLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <FrameLayout
+        android:id="@+id/frameLayout"
+        android:layout_width="match_parent"
+        android:layout_height="155dp"
+        android:background="@color/frame_down_layout"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" >
+
+
+    </FrameLayout>
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/switch_enable"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/btn_Time"
+        app:layout_constraintEnd_toEndOf="@+id/btn_Time"
+        app:layout_constraintStart_toStartOf="@+id/btn_Time" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Alarm Before"
+        app:layout_constraintBottom_toBottomOf="@+id/switch_enable"
+        app:layout_constraintEnd_toEndOf="@+id/txt_Time"
+        app:layout_constraintStart_toStartOf="@+id/txt_Time"
+        app:layout_constraintTop_toTopOf="@+id/switch_enable" />
+
+    <TextView
+        android:id="@+id/txt_Time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Time"
+        app:layout_constraintBottom_toTopOf="@+id/btn_Date"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.11"
+        app:layout_constraintStart_toEndOf="@+id/btn_Time"
+        app:layout_constraintTop_toTopOf="@+id/btn_Time" />
 
     <TextView
         android:id="@+id/txt_Date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Date"
-        android:layout_marginBottom="10dp"
+        app:layout_constraintBottom_toBottomOf="@+id/btn_Date"
+        app:layout_constraintEnd_toEndOf="@+id/txt_Time"
+        app:layout_constraintStart_toStartOf="@+id/txt_Time"
+        app:layout_constraintTop_toTopOf="@+id/btn_Date" />
+    <Button
+        android:id="@+id/btn_Time"
+        android:layout_width="wrap_content"
+        android:layout_height="45dp"
+        android:text="Time"
+        android:textAllCaps="false"
         app:layout_constraintBottom_toTopOf="@+id/btn_Date"
         app:layout_constraintEnd_toEndOf="@+id/btn_Date"
         app:layout_constraintStart_toStartOf="@+id/btn_Date" />
-
-
     <Button
         android:id="@+id/btn_Date"
         android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:layout_marginStart="16dp"
+        android:layout_height="45dp"
+        android:layout_marginBottom="10dp"
         android:text="Date"
         android:textAllCaps="false"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/btn_Time"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.11"
         app:layout_constraintHorizontal_chainStyle="spread"
         app:layout_constraintStart_toStartOf="parent" />
 
 
-    <Button
+
+
+
+
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btnSubmit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Submit"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-    <TextView
-        android:id="@+id/txt_Time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Time"
+        android:layout_marginEnd="10dp"
         android:layout_marginBottom="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/btn_Time"
-        app:layout_constraintEnd_toEndOf="@+id/btn_Time"
-        app:layout_constraintStart_toStartOf="@+id/btn_Time" />
-
-
-
-    <Button
-        android:id="@+id/btn_Time"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:layout_marginStart="167dp"
-        android:layout_marginEnd="52dp"
-        android:text="Time"
-        android:textAllCaps="false"
+        android:src="@drawable/ic_alarm"
+        android:layout_gravity="end|bottom"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/btn_Date" />
+        app:layout_constraintEnd_toEndOf="parent" />
+
+
+
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
