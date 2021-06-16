@@ -16,10 +16,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.michaldrabik.classicmaterialtimepicker.CmtpTimeDialogFragment
 import com.michaldrabik.classicmaterialtimepicker.utilities.setOnTime24PickedListener
 import com.template.basealarm.R
-import com.template.basealarm.data.db.entity.AlarmEntity
 import com.template.basealarm.databinding.FragmentAlarmBinding
+import com.template.basealarm.domain.entity.Alarm
 import com.template.basealarm.ui.adapter.AlarmAdapter
-import com.template.calenderproject.service.ServiceAutoLauncher
+import com.template.basealarm.data.service.ServiceAutoLauncher
 import dagger.hilt.android.AndroidEntryPoint
 import ir.hamsaa.persiandatepicker.PersianDatePickerDialog
 import ir.hamsaa.persiandatepicker.api.PersianPickerDate
@@ -144,7 +144,7 @@ class AlarmFragment : Fragment(R.layout.fragment_alarm) {
         // calendar.add(Calendar.MINUTE ,-2)
         lifecycleScope.launch {
             viewModel.insertToDbAlarm(
-                AlarmEntity(
+                Alarm(
                     timeFormat.format(calendar.time),
                     dateFormat.format(calendar.time),
                     false,

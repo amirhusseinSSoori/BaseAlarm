@@ -25,12 +25,12 @@
         </activity>
 
         <service
-            android:name="com.template.calenderproject.service.AlarmService"
+            android:name="com.template.basealarm.data.service.AlarmService"
             android:enabled="true"
             android:exported="true" />
 
         <receiver
-            android:name="com.template.calenderproject.service.ServiceAutoLauncher"
+            android:name="com.template.basealarm.data.service.ServiceAutoLauncher"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
@@ -41,7 +41,7 @@
         </receiver>
 
         <receiver
-            android:name=".service.NotificationReceiver"
+            android:name="com.template.basealarm.data.service.NotificationReceiver"
             android:enabled="true"
             android:exported="true" />
     </application>

@@ -1,4 +1,4 @@
-package com.template.calenderproject.service
+package com.template.basealarm.data.service
 
 import android.app.*
 import android.content.Intent
@@ -15,7 +15,6 @@ import com.template.basealarm.R
 import com.template.basealarm.showNotificationWithFullScreenIntent
 
 import java.util.*
-import javax.security.auth.login.LoginException
 
 class AlarmService :Service() {
 

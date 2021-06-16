@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.template.basealarm.data.db.entity.AlarmEntity
 import com.template.basealarm.data.repository.AlarmRepositoryImp
+import com.template.basealarm.domain.entity.Alarm
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,7 +14,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class AlarmViewModel @Inject constructor(var repository: AlarmRepositoryImp) : ViewModel() {
+class AlarmViewModel @Inject constructor(var useCase: AlarmRepositoryImp) : ViewModel() {
 
 
     val getDetailsAlarm = MutableStateFlow<StatusAlarm>(StatusAlarm.Empty)
@@ -21,22 +22,22 @@ class AlarmViewModel @Inject constructor(var repository: AlarmRepositoryImp) : V
 
 
 
-    suspend  fun insertToDbAlarm(alarmEntity: AlarmEntity){
-        repository.insertToAlarm(alarmEntity)
+    suspend  fun insertToDbAlarm(alarm: Alarm){
+        useCase.insertToAlarm(alarm)
     }
-
-
     fun showDetailsAlarm() {
        viewModelScope.launch {
-         repository.getDetailsFromDb().collect {
+           useCase.getAllDetailsFromAlarm().collect {
              getDetailsAlarm.value = StatusAlarm.Show(it)
          }
        }
     }
 
 
+
+
     sealed class StatusAlarm() {
-        class Show(val state: List<AlarmEntity>) : StatusAlarm()
+        class Show(val state: List<Alarm>) : StatusAlarm()
         object Empty : StatusAlarm()
     }
 

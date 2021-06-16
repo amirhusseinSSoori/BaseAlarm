@@ -4,7 +4,7 @@ import android.content.Context
 import com.template.basealarm.data.db.DataBase
 import androidx.room.Room
 import com.template.basealarm.common.Constance.DATABASE_NAME
-import com.template.basealarm.data.db.MainDao
+import com.template.basealarm.data.db.dao.AlarmDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -14,7 +14,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object AppModule {
+object RoomModule {
 
     @Singleton
     @Provides
@@ -30,11 +30,8 @@ object AppModule {
             .fallbackToDestructiveMigration()
             .build()
     }
-
-
-
     @Provides
-    fun provideMyDAO(dataBase: DataBase): MainDao {
+    fun provideMyDAO(dataBase: DataBase): AlarmDao {
         return dataBase.getMyDao()
     }
 }

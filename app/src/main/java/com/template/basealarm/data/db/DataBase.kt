@@ -2,6 +2,7 @@ package com.template.basealarm.data.db
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import com.template.basealarm.data.db.dao.AlarmDao
 import com.template.basealarm.data.db.entity.AlarmEntity
 
 @Database(
@@ -9,6 +10,5 @@ import com.template.basealarm.data.db.entity.AlarmEntity
     version  =  1
 )
 abstract class DataBase : RoomDatabase()  {
-
-    abstract fun getMyDao(): MainDao
+    abstract fun getMyDao(): AlarmDao
 }

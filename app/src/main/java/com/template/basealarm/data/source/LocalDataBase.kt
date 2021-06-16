@@ -1,25 +1,19 @@
 package com.template.basealarm.data.source
 
-import com.template.basealarm.data.db.MainDao
-import com.template.basealarm.data.db.entity.AlarmEntity
+import com.template.basealarm.data.db.dao.AlarmDao
+import com.template.basealarm.data.mapper.AlarmMapper
+import com.template.basealarm.domain.entity.Alarm
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 
-class LocalDataBase @Inject constructor(var db:MainDao) {
-
-
-
-
-
-    suspend fun insertToAlarm(alarmEntity: AlarmEntity){
-        db.insert(alarmEntity)
+class LocalDataBase @Inject constructor(private var daoAlarm: AlarmDao, var alarmMapper: AlarmMapper) {
+    suspend fun insertToAlarm(alarm: Alarm) {
+        daoAlarm.insert(alarmMapper.mapFromEntity(alarm))
     }
 
-    fun getAllDetails(): Flow<List<AlarmEntity>> {
-       return db.getAllData()
+    fun getAllDetailsFromDao(): Flow<List<Alarm>> {
+        return daoAlarm.getAllData().map { alarmMapper.mapToEntityList(it) }
     }
-
-
-
 }

@@ -1,4 +1,4 @@
-package com.template.calenderproject.service
+package com.template.basealarm.data.service
 
 import android.content.BroadcastReceiver
 import android.content.Context
