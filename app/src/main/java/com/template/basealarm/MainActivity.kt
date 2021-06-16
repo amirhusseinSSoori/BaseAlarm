@@ -9,10 +9,11 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import com.template.basealarm.databinding.ActivityMainBinding
 import com.template.calenderproject.service.ServiceAutoLauncher
+import dagger.hilt.android.AndroidEntryPoint
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
-
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
 

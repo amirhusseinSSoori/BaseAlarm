@@ -1,7 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    android:layout_margin="11dp">
+    <RelativeLayout
+        android:background="@drawable/bg_round_item"
+        android:layout_width="match_parent"
+        android:layout_height="80dp">
+        <TextView
+            android:id="@+id/item_txt_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1397/12/30"
+            android:fontFamily="@font/iran_sans_mobile"
+            android:textColor="@color/black"
+            android:layout_marginTop="11dp"
+            android:layout_marginStart="11dp"/>
+        <TextView
+            android:id="@+id/item_txt_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="00:00"
+            android:fontFamily="@font/iran_sans_mobile"
+            android:textColor="@color/black"
+            android:layout_marginStart="16dp"
+            android:layout_below="@id/item_txt_date"
+            android:layout_marginTop="11dp"
+        />
+        <androidx.appcompat.widget.SwitchCompat
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="11dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"/>
+
+    </RelativeLayout>
+
+
+</androidx.cardview.widget.CardView>

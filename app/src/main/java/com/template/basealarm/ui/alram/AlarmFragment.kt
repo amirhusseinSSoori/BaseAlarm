@@ -10,20 +10,28 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.michaldrabik.classicmaterialtimepicker.CmtpTimeDialogFragment
 import com.michaldrabik.classicmaterialtimepicker.utilities.setOnTime24PickedListener
 import com.template.basealarm.R
+import com.template.basealarm.data.db.entity.AlarmEntity
 import com.template.basealarm.databinding.FragmentAlarmBinding
+import com.template.basealarm.ui.adapter.AlarmAdapter
 import com.template.calenderproject.service.ServiceAutoLauncher
+import dagger.hilt.android.AndroidEntryPoint
 import ir.hamsaa.persiandatepicker.PersianDatePickerDialog
 import ir.hamsaa.persiandatepicker.api.PersianPickerDate
 import ir.hamsaa.persiandatepicker.api.PersianPickerListener
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
-
+@AndroidEntryPoint
 class AlarmFragment : Fragment(R.layout.fragment_alarm) {
     private var alarmYear = 0
     private var alarmMonth = 0
@@ -33,16 +41,26 @@ class AlarmFragment : Fragment(R.layout.fragment_alarm) {
     lateinit var id: ArrayList<Int>
     lateinit var binding: FragmentAlarmBinding
     private var picker: PersianDatePickerDialog? = null
+    val dateFormat = SimpleDateFormat("dd-MMM-yyyy", Locale.ENGLISH)
+    val timeFormat = SimpleDateFormat("K:mm a", Locale.ENGLISH)
+    private val viewModel: AlarmViewModel by viewModels()
+    lateinit var alarmAdapter: AlarmAdapter
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        alarmAdapter=AlarmAdapter()
+        getDataFromLocal()
+    }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding = FragmentAlarmBinding.bind(view)
         super.onViewCreated(view, savedInstanceState)
         id = ArrayList()
-        Log.e("GGG", "onViewCreated: ${id.size}", )
+        Log.e("GGG", "onViewCreated: ${id.size}")
 
 
 
         initVariables()
+        viewModel.showDetailsAlarm()
 
 
         binding.btnSubmit.setOnClickListener {
@@ -60,6 +78,7 @@ class AlarmFragment : Fragment(R.layout.fragment_alarm) {
                 .setMaxYear(PersianDatePickerDialog.THIS_YEAR)
                 .setInitDate(alarmYear, alarmMonth, alarmDay)
                 .setActionTextColor(Color.GRAY)
+                .setBackgroundColor(Color.parseColor("#80FF5722"))
                 .setTitleType(PersianDatePickerDialog.WEEKDAY_DAY_MONTH_YEAR)
                 .setShowInBottomSheet(true)
                 .setListener(object : PersianPickerListener {
@@ -122,8 +141,17 @@ class AlarmFragment : Fragment(R.layout.fragment_alarm) {
         val alarmManager =
             requireContext().getSystemService(AppCompatActivity.ALARM_SERVICE) as AlarmManager
 
-           // calendar.add(Calendar.MINUTE ,-2)
-
+        // calendar.add(Calendar.MINUTE ,-2)
+        lifecycleScope.launch {
+            viewModel.insertToDbAlarm(
+                AlarmEntity(
+                    timeFormat.format(calendar.time),
+                    dateFormat.format(calendar.time),
+                    false,
+                    id.size + 1
+                )
+            )
+        }
         alarmManager.setExactAndAllowWhileIdle(
             AlarmManager.RTC_WAKEUP,
             calendar.timeInMillis,
@@ -154,24 +182,46 @@ class AlarmFragment : Fragment(R.layout.fragment_alarm) {
         )
 
         //for date
-        val dateFormat = SimpleDateFormat("dd-MMM-yyyy", Locale.ENGLISH)
+
         val eventDate = dateFormat.format(mCal.time)
         binding.txtDate.text = eventDate
 
 
         //for date
-        val timeFormat = SimpleDateFormat("K:mm a", Locale.ENGLISH)
+
         val eventTime = timeFormat.format(mCal.time)
         binding.txtTime.text = eventTime
 
     }
+    private fun getDataFromLocal(){
+        lifecycleScope.launchWhenStarted {
+            viewModel.getDetailsAlarmCollect.collect { data ->
 
 
 
+                 when(data){
+                     is AlarmViewModel.StatusAlarm.Show ->{
+                         alarmAdapter!!.differ.submitList(data.state)
+                         setUpRecyclerView()
+                     }
+                     else -> Unit
+                 }
+            }
+        }
+
+    }
+    private fun setUpRecyclerView() {
+
+        binding.recyclerViewAlartFDetails.apply {
+            adapter = alarmAdapter
+            setHasFixedSize(true)
+            layoutManager = LinearLayoutManager(
+                requireContext(),
+                LinearLayoutManager.VERTICAL, false
+            )
 
 
-
-
-
+        }
+    }
 
 }

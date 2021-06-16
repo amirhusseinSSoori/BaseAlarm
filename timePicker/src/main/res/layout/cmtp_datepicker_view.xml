@@ -4,6 +4,7 @@
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
+	android:background="#80FF5722"
 	tools:parentTag="android.widget.FrameLayout"
 	tools:theme="@style/CmtpViewTheme"
 	>
