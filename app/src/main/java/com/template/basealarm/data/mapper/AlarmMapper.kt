@@ -14,28 +14,30 @@ class AlarmMapper @Inject constructor() : EntityMapper<Alarm, AlarmEntity> {
             time = entity.time,
             date = entity.date,
             alarmBefore = entity.alarmBefore,
-            alarmId=entity.alarmId,
+            alarmed = entity.alarmed,
             id = entity.id
         )
     }
+
     override fun mapToEntity(domainModel: AlarmEntity): Alarm {
         return Alarm(
             time = domainModel.time,
             date = domainModel.date,
             alarmBefore = domainModel.alarmBefore,
-            alarmId=domainModel.alarmId,
+            alarmed = domainModel.alarmed,
             id = domainModel.id
         )
     }
+
     override fun mapFromEntityList(entities: List<Alarm>): List<AlarmEntity> {
         return entities.map { mapFromEntity(it) }
     }
+
     override fun mapToEntityList(domains: List<AlarmEntity>): List<Alarm> {
         return domains.map { mapToEntity(it) }
     }
 
 
-
-    }
+}
 
 

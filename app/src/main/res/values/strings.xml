@@ -70,4 +70,8 @@
     <string name="don_t_forget_to_buy_a_gift">Don\'t forget to buy a gift</string>
     <string name="location">Location</string>
     <string name="event_details">Event Details</string>
+
+    <string name="cmtp_ok">OK</string>
+    <string name="cmtp_cancel">Cancel</string>
+    <string name="cmtp_default_separator">/</string>
 </resources>

@@ -12,16 +12,24 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.template.basealarm.MainActivity
 import com.template.basealarm.R
+import com.template.basealarm.data.db.dao.AlarmDao
+import com.template.basealarm.data.db.entity.AlarmEntity
 import com.template.basealarm.showNotificationWithFullScreenIntent
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 import java.util.*
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class AlarmService :Service() {
 
     private val TAG = this.javaClass.simpleName
 
     private var bundle: Bundle? = null
-    private var eventTitle: String? = "null"
+    private var alarmId: Int? = null
     private var eventNote: String? = "null"
     private var eventColor: Int? = null
     private var interval: String? = null
@@ -29,22 +37,23 @@ class AlarmService :Service() {
     private var notificationId: Int? = 0
     private var soundName: String? = null
 
+    @Inject
+    lateinit var db:AlarmDao
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Log.d(TAG, "onStartCommand: ")
         if (intent != null) {
             bundle = intent.extras
-//            eventTitle = bundle!!.getString("eventTitle", "No title")
-//            eventNote = bundle!!.getString("eventNote", "No note")
-//            eventColor = bundle!!.getInt("eventColor", -49920)
-//            eventTimeStamp = bundle!!.getString("eventTimeStamp", "No Timestamp")
-//            interval = bundle!!.getString("interval", "")
-//            notificationId = bundle!!.getInt("notificationId", 0)
-//            soundName = bundle!!.getString("soundName", "Consequence")
-           // showNotification()
-            showNotificationWithFullScreenIntent()
+           alarmId = bundle!!.getInt("alarmId", 100)
+
+            CoroutineScope(context = Dispatchers.IO).launch {
+                db.update(AlarmEntity("","",false,true,alarmId))
+            }
+
+           showNotification()
+
             Log.e("Show", "onStartCommand: ", )
-            //setNewAlarm()
+
         }
         return super.onStartCommand(intent, flags, startId)
     }

@@ -9,4 +9,7 @@ interface BaseDao<T> {
     suspend fun insert(obj: T)
     @Delete
     fun delete(obj: T)
+
+    @Update
+    suspend fun update(obj: T)
 }

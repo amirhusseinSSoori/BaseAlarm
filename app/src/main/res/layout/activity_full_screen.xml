@@ -14,7 +14,7 @@
         android:id="@+id/img_FullScreenActivityFG"
         android:layout_width="70dp"
         android:layout_height="70dp"
-        android:background="@drawable/bg_img_alarm"
+        android:background="@drawable/bg_img_alarm_enable"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

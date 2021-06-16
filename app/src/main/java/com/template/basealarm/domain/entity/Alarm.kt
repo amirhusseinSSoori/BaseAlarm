@@ -5,6 +5,6 @@ data class Alarm(
     var time: String? = null,
     var date: String? = null,
     var alarmBefore: Boolean? = null,
-    var alarmId: Int? = null,
+    var alarmed:Boolean?=null,
     val id: Int? = null
 )

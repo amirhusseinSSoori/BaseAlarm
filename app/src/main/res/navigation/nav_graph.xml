@@ -9,10 +9,10 @@
     <fragment
         android:id="@+id/calFragment"
         tools:layout="@layout/fragment_calender"
-        android:name="com.template.basealarm.ui.CalFragment"
+        android:name="com.template.basealarm.presentation.ui.CalFragment"
         android:label="CalFragment" />
     <fragment
         android:id="@+id/alarmFragment"
-        android:name="com.template.basealarm.ui.alram.AlarmFragment"
+        android:name="com.template.basealarm.presentation.ui.alram.AlarmFragment"
         android:label="AlarmFragment" />
 </navigation>
