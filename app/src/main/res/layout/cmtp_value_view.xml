@@ -15,6 +15,7 @@
 		android:layout_marginTop="8dp"
 		android:layout_marginBottom="8dp"
 		android:ellipsize="none"
+		android:fontFamily="@font/iran_sans_mobile"
 		android:gravity="center"
 		android:singleLine="true"
 		android:textColor="?cmtpTextColor"

@@ -38,6 +38,7 @@ class AlarmFragment : Fragment(R.layout.fragment_alarm) {
     private var alarmDay = 0
     private var alarmHour = 0
     private var alarmMinute = 0
+    private var number:Int ?=null
     lateinit var id: ArrayList<Int>
     lateinit var binding: FragmentAlarmBinding
     private var picker: PersianDatePickerDialog? = null
@@ -47,33 +48,32 @@ class AlarmFragment : Fragment(R.layout.fragment_alarm) {
     lateinit var alarmAdapter: AlarmAdapter
 
 
-    val min = 0
-    val max = 10000000
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         alarmAdapter = AlarmAdapter()
 
         getDataFromLocalColloct()
+        getAlarmIdCollect()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding = FragmentAlarmBinding.bind(view)
         super.onViewCreated(view, savedInstanceState)
-        id = ArrayList()
-
-
-
-
         initVariables()
-
 
         viewModel.showDetailsAlarm()
 
 
+        //getAlarm Id
+        viewModel.getAlarmId()
+
+
+
+
         binding.btnSubmit.setOnClickListener {
-            setAlarms()
+            setAlarms(number!!)
+            updateAlarmId(number!!+1)
         }
 
 
@@ -97,10 +97,7 @@ class AlarmFragment : Fragment(R.layout.fragment_alarm) {
                         alarmYear = persianPickerDate.gregorianYear
                         alarmMonth = persianPickerDate.gregorianMonth - 1
                         alarmDay = persianPickerDate.gregorianDay
-                        Log.e(
-                            "TAG",
-                            "onDateSelected: ${persianPickerDate.gregorianDay}  -   ${persianPickerDate.gregorianMonth}  -  ${persianPickerDate.gregorianYear}",
-                        )
+
 
                         Toast.makeText(
                             requireContext(),
@@ -131,7 +128,6 @@ class AlarmFragment : Fragment(R.layout.fragment_alarm) {
                     alarmHour = time.hour
                     alarmMinute = time.minute
                     binding.txtTime.text = "${time.hour} - ${time.minute} "
-                    Log.e("TAG", "onViewCreated: ${time.hour} - ${time.minute} ")
                 }
             })
             dialog.show(requireActivity().supportFragmentManager, "TimePicker")
@@ -139,9 +135,7 @@ class AlarmFragment : Fragment(R.layout.fragment_alarm) {
 
     }
 
-    private fun setAlarms() {
-        val random = Random().nextInt(max - min + 1) + min
-        Log.e("TAG", "setAlarms:${alarmMonth} ")
+    private fun setAlarms(alarmid:Int) {
         val calendar = Calendar.getInstance()
         calendar[alarmYear, alarmMonth] = alarmDay
         calendar[Calendar.HOUR_OF_DAY] = alarmHour
@@ -149,12 +143,14 @@ class AlarmFragment : Fragment(R.layout.fragment_alarm) {
         calendar[Calendar.SECOND] = 0
 
 
-        id.add(1)
+
 
         val intent = Intent(requireContext(), ServiceAutoLauncher::class.java)
-        intent.putExtra("alarmId",random)
+        intent.putExtra("alarmId",alarmid)
+        intent.putExtra("time",timeFormat.format(calendar.time))
+        intent.putExtra("date",dateFormat.format(calendar.time))
         val pendingIntent =
-            PendingIntent.getBroadcast(requireContext(), random, intent, 0)
+            PendingIntent.getBroadcast(requireContext(), alarmid, intent, 0)
         val alarmManager =
             requireContext().getSystemService(AppCompatActivity.ALARM_SERVICE) as AlarmManager
 
@@ -166,7 +162,7 @@ class AlarmFragment : Fragment(R.layout.fragment_alarm) {
                     dateFormat.format(calendar.time),
                     false,
                     false,
-                    random,
+                    alarmid,
                     )
             )
         }
@@ -175,36 +171,32 @@ class AlarmFragment : Fragment(R.layout.fragment_alarm) {
             calendar.timeInMillis,
             pendingIntent
         )
+
     }
 
     private fun initVariables() {
         val mCal = Calendar.getInstance()
         mCal.timeZone = TimeZone.getDefault()
 
-        //initail time
+        //initial time
         alarmHour = mCal[Calendar.HOUR_OF_DAY]
         alarmMinute = mCal[Calendar.MINUTE]
 
 
-        //initail date
+        //initial  date
         alarmYear = mCal[Calendar.YEAR]
         alarmMonth = mCal[Calendar.MONTH]
         alarmDay = mCal[Calendar.DAY_OF_MONTH]
-
-
-
-
-        Log.e(
-            "Details",
-            "initVariables:   hour : $alarmHour  minute : $alarmMinute   Year : $alarmYear  Month : ${mCal[Calendar.MONTH]} Day: $alarmDay  "
-        )
 
 
         //for date
         binding.txtDate.text = dateFormat.format(mCal.time)
         //for time
         binding.txtTime.text = timeFormat.format(mCal.time)
+    }
 
+    private fun updateAlarmId(id:Int){
+        viewModel.updateAlarmId(id)
     }
 
     private fun getDataFromLocalColloct() {
@@ -214,14 +206,11 @@ class AlarmFragment : Fragment(R.layout.fragment_alarm) {
                     is AlarmViewModel.StatusAlarm.Show -> {
                         alarmAdapter!!.differ.submitList(data.state)
                         setUpRecyclerView()
-                        Log.e("itemCount", "getDataFromLocalColloct:  ${alarmAdapter.itemCount}")
-
                     }
                     else -> Unit
                 }
             }
         }
-
     }
 
     private fun setUpRecyclerView() {
@@ -233,6 +222,20 @@ class AlarmFragment : Fragment(R.layout.fragment_alarm) {
                 LinearLayoutManager.VERTICAL, false
             )
         }
+    }
+
+    private fun getAlarmIdCollect(){
+        lifecycleScope.launch () {
+            viewModel.getDetailsAlarmIdCollect.collect {alarmStatus ->
+                when(alarmStatus){
+                    is AlarmViewModel.StatusAlarmId.Show ->{
+                        number= alarmStatus.state
+                    }
+                    else -> Unit
+                }
+            }
+        }
+
     }
 
 }

@@ -1,7 +1,10 @@
 package com.template.basealarm.presentation.ui.adapter
 
+import android.content.Context
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -30,18 +33,25 @@ class AlarmAdapter() : RecyclerView.Adapter<AlarmAdapter.Holder>() {
                 parent,
                 false
             )
+        ,
+            parent.context
         )
     }
 
 
-    inner class Holder(val bind: ItemCustomLayoutBinding) : RecyclerView.ViewHolder(bind.root) {
+    inner class Holder(val bind: ItemCustomLayoutBinding,val context:Context) : RecyclerView.ViewHolder(bind.root) {
         fun bind(data: Alarm) {
             bind.itemTxtDate.text = data.date
             bind.itemTxtTime.text = data.time
+
+
             if (data.alarmed!!) {
-
-
                 bind.relativeContainer.setBackgroundResource(R.drawable.bg_img_alarm_disable)
+
+                bind.itemTxtDate.setTextColor(ContextCompat.getColor(context, R.color.white))
+                bind.itemTxtTime.setTextColor(ContextCompat.getColor(context, R.color.white))
+
+
 
             }
         }

@@ -24,12 +24,14 @@ import java.util.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class AlarmService :Service() {
+class AlarmService : Service() {
 
     private val TAG = this.javaClass.simpleName
 
     private var bundle: Bundle? = null
     private var alarmId: Int? = null
+    private var timeAlarm: String? = null
+    private var dateAlarm: String? = null
     private var eventNote: String? = "null"
     private var eventColor: Int? = null
     private var interval: String? = null
@@ -38,25 +40,27 @@ class AlarmService :Service() {
     private var soundName: String? = null
 
     @Inject
-    lateinit var db:AlarmDao
+    lateinit var db: AlarmDao
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Log.d(TAG, "onStartCommand: ")
         if (intent != null) {
             bundle = intent.extras
-           alarmId = bundle!!.getInt("alarmId", 100)
-
+            alarmId = bundle!!.getInt("alarmId", 100)
+            timeAlarm = bundle!!.getString("time", "00:00")
+            dateAlarm = bundle!!.getString("date", "00/00/00")
             CoroutineScope(context = Dispatchers.IO).launch {
-                db.update(AlarmEntity("","",false,true,alarmId))
+                db.update(AlarmEntity(timeAlarm, dateAlarm, false, true, alarmId))
             }
 
-           showNotification()
+            showNotification()
 
-            Log.e("Show", "onStartCommand: ", )
+            Log.e("Show", "onStartCommand: ")
 
         }
         return super.onStartCommand(intent, flags, startId)
     }
+
     private fun showNotification() {
         // Uri ringtoneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         val ringtoneUri = Uri.parse(
@@ -92,7 +96,7 @@ class AlarmService :Service() {
             mChannel.enableLights(true)
             mChannel.enableVibration(true)
             mChannel.vibrationPattern = vibratePattern
-          //  mChannel.lightColor = eventColor!!
+            //  mChannel.lightColor = eventColor!!
             mChannel.setSound(ringtoneUri, att)
             mChannel.setBypassDnd(true)
             mChannel.lockscreenVisibility = NotificationCompat.VISIBILITY_PUBLIC
@@ -105,7 +109,7 @@ class AlarmService :Service() {
                 .setVibrate(vibratePattern)
                 .setSound(ringtoneUri)
                 //.setColor(eventColor!!)
-               // .setContentTitle(eventTitle)
+                // .setContentTitle(eventTitle)
                 .setStyle(NotificationCompat.BigTextStyle().bigText("eventNote"))
                 .setAutoCancel(true)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
