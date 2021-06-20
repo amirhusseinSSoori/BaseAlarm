@@ -11,12 +11,12 @@ import androidx.core.app.NotificationCompat
 fun Context.showNotificationWithFullScreenIntent(
     isLockScreen: Boolean = false,
     channelId: String = CHANNEL_ID,
-    title: String = "Title",
-    description: String = "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+    title: String = "Atm",
+    description: String = "new Alarm"
 
 ) {
     val builder = NotificationCompat.Builder(this, channelId)
-        .setSmallIcon(android.R.drawable.arrow_up_float)
+        .setSmallIcon(R.drawable.ic_alarm)
         .setContentTitle(title)
         .setContentText(description)
         .setPriority(NotificationCompat.PRIORITY_HIGH)

@@ -16,4 +16,5 @@
     <color name="cmtp_black">#000000</color>
     <color name="cmtp_white">#FFFFFF</color>
     <color name="disable_alarm">#8C8888</color>
+    <color name="repaet_alarm">#29B6F6</color>
 </resources>

@@ -7,6 +7,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.CompoundButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -31,6 +32,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
+
 @AndroidEntryPoint
 class AlarmFragment : Fragment(R.layout.fragment_alarm) {
     private var alarmYear = 0
@@ -38,12 +40,21 @@ class AlarmFragment : Fragment(R.layout.fragment_alarm) {
     private var alarmDay = 0
     private var alarmHour = 0
     private var alarmMinute = 0
+    private var enableAlarmRepeat=false
+
+
+    var list=ArrayList<Alarm>()
+
+
+
+
+
     private var number:Int ?=null
     lateinit var id: ArrayList<Int>
     lateinit var binding: FragmentAlarmBinding
     private var picker: PersianDatePickerDialog? = null
     val dateFormat = SimpleDateFormat("dd-MMM-yyyy", Locale.ENGLISH)
-    val timeFormat = SimpleDateFormat("K:mm a", Locale.ENGLISH)
+    val timeFormat = SimpleDateFormat("K:mm", Locale.ENGLISH)
     private val viewModel: AlarmViewModel by viewModels()
     lateinit var alarmAdapter: AlarmAdapter
 
@@ -65,15 +76,19 @@ class AlarmFragment : Fragment(R.layout.fragment_alarm) {
         viewModel.showDetailsAlarm()
 
 
+
+
+
         //getAlarm Id
         viewModel.getAlarmId()
 
 
-
+        setUPSwitchInAndroid()
 
         binding.btnSubmit.setOnClickListener {
             setAlarms(number!!)
             updateAlarmId(number!!+1)
+            binding.switchEnable.isChecked=false
         }
 
 
@@ -145,23 +160,39 @@ class AlarmFragment : Fragment(R.layout.fragment_alarm) {
 
 
 
+
+        if(enableAlarmRepeat){
+            calendar.add(Calendar.MINUTE, -1);
+        }
+
+
+        Log.e("alarm", "setAlarms:  ${enableAlarmRepeat}", )
         val intent = Intent(requireContext(), ServiceAutoLauncher::class.java)
         intent.putExtra("alarmId",alarmid)
-        intent.putExtra("time",timeFormat.format(calendar.time))
+        intent.putExtra("min_main",alarmMinute)
+        intent.putExtra("min",checkRepeatAlarm(enableAlarmRepeat,alarmMinute))
+        intent.putExtra("hour",alarmHour)
+
+        intent.putExtra("day",alarmDay)
+        intent.putExtra("month",alarmMonth)
+        intent.putExtra("year",alarmYear)
+
         intent.putExtra("date",dateFormat.format(calendar.time))
+        intent.putExtra("repeat",enableAlarmRepeat)
         val pendingIntent =
             PendingIntent.getBroadcast(requireContext(), alarmid, intent, 0)
-        val alarmManager =
-            requireContext().getSystemService(AppCompatActivity.ALARM_SERVICE) as AlarmManager
+        val alarmManager = requireContext().getSystemService(AppCompatActivity.ALARM_SERVICE) as AlarmManager
+
+
 
 
         lifecycleScope.launch {
             viewModel.insertToDbAlarm(
                 Alarm(
-                    timeFormat.format(calendar.time),
+                    "${calendar[Calendar.HOUR_OF_DAY]}:${alarmMinute}",
                     dateFormat.format(calendar.time),
-                    false,
-                    false,
+                    enableAlarmRepeat,
+                    "now",
                     alarmid,
                     )
             )
@@ -234,6 +265,32 @@ class AlarmFragment : Fragment(R.layout.fragment_alarm) {
                     else -> Unit
                 }
             }
+        }
+
+    }
+
+
+
+    private fun setUPSwitchInAndroid(){
+        binding.switchEnable.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                enableAlarmRepeat = isChecked
+                Log.e("isChecked", "setUPSwitchInAndroid:  ${enableAlarmRepeat}",)
+                // The toggle is enabled
+            } else {
+                enableAlarmRepeat = isChecked
+                Log.e("isNotChecked", "setUPSwitchInAndroid:  ${enableAlarmRepeat}",)
+                // The toggle is disabled
+            }
+        }
+    }
+
+
+    fun checkRepeatAlarm(status:Boolean,min: Int):Int{
+       return if(status){
+            min -1
+        }else{
+           min
         }
 
     }

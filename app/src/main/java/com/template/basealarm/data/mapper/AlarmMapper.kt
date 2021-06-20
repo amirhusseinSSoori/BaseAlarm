@@ -14,7 +14,7 @@ class AlarmMapper @Inject constructor() : EntityMapper<Alarm, AlarmEntity> {
             time = entity.time,
             date = entity.date,
             alarmBefore = entity.alarmBefore,
-            alarmed = entity.alarmed,
+            alarmStatus = entity.alarmStatus,
             id = entity.id
         )
     }
@@ -24,7 +24,7 @@ class AlarmMapper @Inject constructor() : EntityMapper<Alarm, AlarmEntity> {
             time = domainModel.time,
             date = domainModel.date,
             alarmBefore = domainModel.alarmBefore,
-            alarmed = domainModel.alarmed,
+            alarmStatus = domainModel.alarmStatus,
             id = domainModel.id
         )
     }

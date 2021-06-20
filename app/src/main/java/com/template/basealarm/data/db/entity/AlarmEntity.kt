@@ -8,7 +8,7 @@ data class AlarmEntity(
     var time: String? = null,
     var date: String? = null,
     var alarmBefore: Boolean? = null,
-    var alarmed:Boolean?=null,
+    var alarmStatus:String?=null,
     @PrimaryKey(autoGenerate = true)
     val id: Int? = null
 )

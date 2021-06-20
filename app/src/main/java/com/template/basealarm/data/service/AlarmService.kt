@@ -1,6 +1,7 @@
 package com.template.basealarm.data.service
 
 import android.app.*
+import android.content.Context
 import android.content.Intent
 import android.media.AudioAttributes
 import android.media.RingtoneManager
@@ -9,6 +10,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
 import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 import com.template.basealarm.MainActivity
 import com.template.basealarm.R
@@ -19,9 +21,10 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-
+import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
+
 
 @AndroidEntryPoint
 class AlarmService : Service() {
@@ -30,8 +33,17 @@ class AlarmService : Service() {
 
     private var bundle: Bundle? = null
     private var alarmId: Int? = null
-    private var timeAlarm: String? = null
+    private var min: Int? = null
+    private var min_main: Int? = null
+    private var hour: Int? = null
     private var dateAlarm: String? = null
+    private var repeat:Boolean?=null
+
+    private var day:Int?=null
+    private var month:Int?=null
+    private var year:Int?=null
+    val dateFormat = SimpleDateFormat("dd-MMM-yyyy", Locale.ENGLISH)
+
     private var eventNote: String? = "null"
     private var eventColor: Int? = null
     private var interval: String? = null
@@ -47,19 +59,78 @@ class AlarmService : Service() {
         if (intent != null) {
             bundle = intent.extras
             alarmId = bundle!!.getInt("alarmId", 100)
-            timeAlarm = bundle!!.getString("time", "00:00")
+            min = bundle!!.getInt("min", 0)
+            min_main=bundle!!.getInt("min_main", 0)
+            hour= bundle!!.getInt("hour", 0)
             dateAlarm = bundle!!.getString("date", "00/00/00")
-            CoroutineScope(context = Dispatchers.IO).launch {
-                db.update(AlarmEntity(timeAlarm, dateAlarm, false, true, alarmId))
-            }
+            repeat=bundle!!.getBoolean("repeat",false)
+            day=bundle!!.getInt("day",0)
+            month=bundle!!.getInt("month",0)
+            year=bundle!!.getInt("year",0)
+            Log.e("min", "onStartCommand:${min_main} $alarmId")
 
-            showNotification()
+
+            CoroutineScope(context = Dispatchers.IO).launch {
+                if(!repeat!!){
+                    db.update(AlarmEntity("$hour:$min", dateAlarm, false, "past", alarmId))
+                }else
+                {
+                    db.update(AlarmEntity("$hour:$min_main", dateAlarm, false, "repeat", alarmId))
+                    isRepeatAlarm(alarmId!!)
+                    repeat=false
+                }
+
+            }
+            showNotificationWithFullScreenIntent()
+            //showNotification()
 
             Log.e("Show", "onStartCommand: ")
 
         }
         return super.onStartCommand(intent, flags, startId)
     }
+
+    private fun isRepeatAlarm(id:Int){
+        cancelAlarm(id)
+
+        val calendar = Calendar.getInstance()
+        calendar[year!!, month!!] = day!!
+        calendar[Calendar.HOUR_OF_DAY] = hour!!.toInt()
+        calendar[Calendar.MINUTE] = min_main!!.toInt()
+        calendar[Calendar.SECOND] = 0
+
+        val intent = Intent(applicationContext, ServiceAutoLauncher::class.java)
+        intent.putExtra("min",min_main!!.toInt())
+        intent.putExtra("hour",hour)
+        intent.putExtra("alarmId",id)
+        intent.putExtra("day",day)
+        intent.putExtra("month",month)
+        intent.putExtra("year",year)
+        intent.putExtra("repeat",false)
+        intent.putExtra("date",dateFormat.format(calendar.time))
+
+        val pendingIntent =
+            PendingIntent.getBroadcast(applicationContext, id, intent, 0)
+        val alarmManager =
+            applicationContext.getSystemService(AppCompatActivity.ALARM_SERVICE) as AlarmManager
+
+        alarmManager.setExactAndAllowWhileIdle(
+            AlarmManager.RTC_WAKEUP,
+            calendar.timeInMillis,
+            pendingIntent
+        )
+    }
+
+    private fun cancelAlarm(id: Int){
+        val alarmManager = applicationContext.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val myIntent = Intent(applicationContext, ServiceAutoLauncher::class.java)
+        val pendingIntent = PendingIntent.getBroadcast(
+            applicationContext, id, myIntent, 0
+        )
+        alarmManager.cancel(pendingIntent)
+        pendingIntent.cancel()
+    }
+
 
     private fun showNotification() {
         // Uri ringtoneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);

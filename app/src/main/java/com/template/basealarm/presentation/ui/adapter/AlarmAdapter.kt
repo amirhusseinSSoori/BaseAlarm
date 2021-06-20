@@ -45,15 +45,23 @@ class AlarmAdapter() : RecyclerView.Adapter<AlarmAdapter.Holder>() {
             bind.itemTxtTime.text = data.time
 
 
-            if (data.alarmed!!) {
-                bind.relativeContainer.setBackgroundResource(R.drawable.bg_img_alarm_disable)
-
-                bind.itemTxtDate.setTextColor(ContextCompat.getColor(context, R.color.white))
-                bind.itemTxtTime.setTextColor(ContextCompat.getColor(context, R.color.white))
 
 
+            when(data.alarmStatus){
+                "past" ->{
+                    bind.relativeContainer.setBackgroundResource(R.drawable.bg_img_alarm_disable)
 
+                    bind.itemTxtDate.setTextColor(ContextCompat.getColor(context, R.color.white))
+                    bind.itemTxtTime.setTextColor(ContextCompat.getColor(context, R.color.white))
+                }
+                "repeat" ->{
+                    bind.relativeContainer.setBackgroundResource(R.drawable.bg_repate_alarm)
+
+                    bind.itemTxtDate.setTextColor(ContextCompat.getColor(context, R.color.white))
+                    bind.itemTxtTime.setTextColor(ContextCompat.getColor(context, R.color.white))
+                }
             }
+
         }
 
     }
