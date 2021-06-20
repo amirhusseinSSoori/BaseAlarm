@@ -6,7 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layoutDirection="ltr"
-    android:background="#D9F44336"
     android:orientation="vertical"
     tools:ignore="RtlHardcoded,UnusedAttribute">
 
@@ -17,6 +16,8 @@
         android:layout_marginTop="30dp"
         android:layout_marginBottom="40dp"
         android:gravity="center"
+        android:textColor="#fff"
+        android:fontFamily="@font/iran_sans_mobile"
         android:textSize="16sp"
         tools:text="سه شنبه" />
 

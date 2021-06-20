@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="11dp"
     android:layout_margin="11dp">
     <RelativeLayout
         android:id="@+id/relative_container"
@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:text="1397/12/30"
             android:fontFamily="@font/iran_sans_mobile"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:layout_marginTop="11dp"
             android:layout_marginStart="11dp"/>
         <TextView
@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:text="00:00"
             android:fontFamily="@font/iran_sans_mobile"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:layout_marginStart="16dp"
             android:layout_below="@id/item_txt_date"
             android:layout_marginTop="11dp"

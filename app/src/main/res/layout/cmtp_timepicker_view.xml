@@ -13,7 +13,7 @@
 		android:layout_height="@dimen/cmtp_timepicker_height"
 		android:layout_gravity="center"
 		android:gravity="center"
-		android:background="#80FF5722"
+		android:background="@color/purple_200"
 		android:orientation="horizontal"
 		>
 
@@ -31,7 +31,7 @@
 			android:layout_height="wrap_content"
 			android:layout_marginBottom="1dp"
 			android:text=":"
-			android:textColor="?cmtpTextColor"
+			android:textColor="#fff"
 			android:textSize="?cmtpTextSize"
 			android:theme="@style/CmtpViewTheme"
 			tools:ignore="HardcodedText"

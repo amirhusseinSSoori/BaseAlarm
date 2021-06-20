@@ -40,16 +40,12 @@ class AlarmFragment : Fragment(R.layout.fragment_alarm) {
     private var alarmDay = 0
     private var alarmHour = 0
     private var alarmMinute = 0
-    private var enableAlarmRepeat=false
-
-
-    var list=ArrayList<Alarm>()
+    private var enableAlarmRepeat = false
 
 
 
 
-
-    private var number:Int ?=null
+    private var number: Int? = null
     lateinit var id: ArrayList<Int>
     lateinit var binding: FragmentAlarmBinding
     private var picker: PersianDatePickerDialog? = null
@@ -57,7 +53,6 @@ class AlarmFragment : Fragment(R.layout.fragment_alarm) {
     val timeFormat = SimpleDateFormat("K:mm", Locale.ENGLISH)
     private val viewModel: AlarmViewModel by viewModels()
     lateinit var alarmAdapter: AlarmAdapter
-
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -76,9 +71,6 @@ class AlarmFragment : Fragment(R.layout.fragment_alarm) {
         viewModel.showDetailsAlarm()
 
 
-
-
-
         //getAlarm Id
         viewModel.getAlarmId()
 
@@ -87,8 +79,8 @@ class AlarmFragment : Fragment(R.layout.fragment_alarm) {
 
         binding.btnSubmit.setOnClickListener {
             setAlarms(number!!)
-            updateAlarmId(number!!+1)
-            binding.switchEnable.isChecked=false
+            updateAlarmId(number!! + 1)
+            binding.switchEnable.isChecked = false
         }
 
 
@@ -101,11 +93,12 @@ class AlarmFragment : Fragment(R.layout.fragment_alarm) {
                 .setTodayButtonVisible(true)
                 .setMinYear(1300)
                 .setAllButtonsTextSize(12)
+                .setActionTextColor(Color.WHITE)
                 .setMaxYear(PersianDatePickerDialog.THIS_YEAR)
                 .setInitDate(alarmYear, alarmMonth, alarmDay)
-                .setActionTextColor(Color.GRAY)
-                .setBackgroundColor(Color.parseColor("#80FF5722"))
+                .setBackgroundColor(Color.parseColor("#534bae"))
                 .setTitleType(PersianDatePickerDialog.WEEKDAY_DAY_MONTH_YEAR)
+                .setTitleColor(Color.WHITE)
                 .setShowInBottomSheet(true)
                 .setListener(object : PersianPickerListener {
                     override fun onDateSelected(persianPickerDate: PersianPickerDate) {
@@ -150,7 +143,7 @@ class AlarmFragment : Fragment(R.layout.fragment_alarm) {
 
     }
 
-    private fun setAlarms(alarmid:Int) {
+    private fun setAlarms(alarmid: Int) {
         val calendar = Calendar.getInstance()
         calendar[alarmYear, alarmMonth] = alarmDay
         calendar[Calendar.HOUR_OF_DAY] = alarmHour
@@ -161,27 +154,27 @@ class AlarmFragment : Fragment(R.layout.fragment_alarm) {
 
 
 
-        if(enableAlarmRepeat){
+        if (enableAlarmRepeat) {
             calendar.add(Calendar.MINUTE, -1);
         }
 
 
-        Log.e("alarm", "setAlarms:  ${enableAlarmRepeat}", )
         val intent = Intent(requireContext(), ServiceAutoLauncher::class.java)
-        intent.putExtra("alarmId",alarmid)
-        intent.putExtra("min_main",alarmMinute)
-        intent.putExtra("min",checkRepeatAlarm(enableAlarmRepeat,alarmMinute))
-        intent.putExtra("hour",alarmHour)
+        intent.putExtra("alarmId", alarmid)
+        intent.putExtra("min_main", alarmMinute)
+        intent.putExtra("min", checkRepeatAlarm(enableAlarmRepeat, alarmMinute))
+        intent.putExtra("hour", alarmHour)
 
-        intent.putExtra("day",alarmDay)
-        intent.putExtra("month",alarmMonth)
-        intent.putExtra("year",alarmYear)
+        intent.putExtra("day", alarmDay)
+        intent.putExtra("month", alarmMonth)
+        intent.putExtra("year", alarmYear)
 
-        intent.putExtra("date",dateFormat.format(calendar.time))
-        intent.putExtra("repeat",enableAlarmRepeat)
+        intent.putExtra("date", dateFormat.format(calendar.time))
+        intent.putExtra("repeat", enableAlarmRepeat)
         val pendingIntent =
             PendingIntent.getBroadcast(requireContext(), alarmid, intent, 0)
-        val alarmManager = requireContext().getSystemService(AppCompatActivity.ALARM_SERVICE) as AlarmManager
+        val alarmManager =
+            requireContext().getSystemService(AppCompatActivity.ALARM_SERVICE) as AlarmManager
 
 
 
@@ -194,7 +187,7 @@ class AlarmFragment : Fragment(R.layout.fragment_alarm) {
                     enableAlarmRepeat,
                     "now",
                     alarmid,
-                    )
+                )
             )
         }
         alarmManager.setExactAndAllowWhileIdle(
@@ -226,7 +219,7 @@ class AlarmFragment : Fragment(R.layout.fragment_alarm) {
         binding.txtTime.text = timeFormat.format(mCal.time)
     }
 
-    private fun updateAlarmId(id:Int){
+    private fun updateAlarmId(id: Int) {
         viewModel.updateAlarmId(id)
     }
 
@@ -255,12 +248,12 @@ class AlarmFragment : Fragment(R.layout.fragment_alarm) {
         }
     }
 
-    private fun getAlarmIdCollect(){
-        lifecycleScope.launch () {
-            viewModel.getDetailsAlarmIdCollect.collect {alarmStatus ->
-                when(alarmStatus){
-                    is AlarmViewModel.StatusAlarmId.Show ->{
-                        number= alarmStatus.state
+    private fun getAlarmIdCollect() {
+        lifecycleScope.launch() {
+            viewModel.getDetailsAlarmIdCollect.collect { alarmStatus ->
+                when (alarmStatus) {
+                    is AlarmViewModel.StatusAlarmId.Show -> {
+                        number = alarmStatus.state
                     }
                     else -> Unit
                 }
@@ -270,27 +263,26 @@ class AlarmFragment : Fragment(R.layout.fragment_alarm) {
     }
 
 
-
-    private fun setUPSwitchInAndroid(){
+    private fun setUPSwitchInAndroid() {
         binding.switchEnable.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 enableAlarmRepeat = isChecked
-                Log.e("isChecked", "setUPSwitchInAndroid:  ${enableAlarmRepeat}",)
+                Log.e("isChecked", "setUPSwitchInAndroid:  ${enableAlarmRepeat}")
                 // The toggle is enabled
             } else {
                 enableAlarmRepeat = isChecked
-                Log.e("isNotChecked", "setUPSwitchInAndroid:  ${enableAlarmRepeat}",)
+                Log.e("isNotChecked", "setUPSwitchInAndroid:  ${enableAlarmRepeat}")
                 // The toggle is disabled
             }
         }
     }
 
 
-    fun checkRepeatAlarm(status:Boolean,min: Int):Int{
-       return if(status){
-            min -1
-        }else{
-           min
+    fun checkRepeatAlarm(status: Boolean, min: Int): Int {
+        return if (status) {
+            min - 1
+        } else {
+            min
         }
 
     }

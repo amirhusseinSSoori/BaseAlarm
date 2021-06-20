@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/mainContainer"
-    android:background="@color/frame_down_layout"
+    android:background="@color/purple_700"
     tools:context=".FullScreenActivity">
 
 
@@ -20,6 +20,26 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/ic_forward"
+        android:rotation="180"
+        app:layout_constraintBottom_toBottomOf="@+id/img_FullScreenActivityFG"
+        app:layout_constraintEnd_toStartOf="@+id/img_FullScreenActivityFG"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/img_FullScreenActivityFG"
+        app:layout_constraintVertical_bias="0.48" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/ic_forward"
+        app:layout_constraintBottom_toBottomOf="@+id/img_FullScreenActivityFG"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/img_FullScreenActivityFG"
+        app:layout_constraintTop_toTopOf="@+id/img_FullScreenActivityFG" />
     <View
         android:layout_width="45dp"
         android:layout_height="45dp"

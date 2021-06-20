@@ -4,25 +4,36 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/purple_500"
     tools:context=".MainActivity">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView_AlartF_details"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toTopOf="@+id/frameLayout"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        tools:listitem="@layout/item_custom_layout"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
+        tools:listitem="@layout/item_custom_layout" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#fff"
+        app:layout_constraintBottom_toBottomOf="@+id/recyclerView_AlartF_details"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 
     <FrameLayout
         android:id="@+id/frameLayout"
         android:layout_width="match_parent"
         android:layout_height="155dp"
-        android:background="@color/frame_down_layout"
+        android:background="@color/purple_200"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" >
@@ -40,7 +51,8 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Alarm Before"
+        android:text="یک  دقیقه  یادآوری"
+        android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="@+id/switch_enable"
         app:layout_constraintEnd_toEndOf="@+id/txt_Time"
         app:layout_constraintStart_toStartOf="@+id/txt_Time"
@@ -51,6 +63,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Time"
+        android:fontFamily="@font/iran_sans_mobile"
+        android:textColor="@color/white"
         app:layout_constraintBottom_toTopOf="@+id/btn_Date"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.11"
@@ -62,6 +76,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Date"
+        android:textColor="@color/white"
+        android:fontFamily="@font/iran_sans_mobile"
         app:layout_constraintBottom_toBottomOf="@+id/btn_Date"
         app:layout_constraintEnd_toEndOf="@+id/txt_Time"
         app:layout_constraintStart_toStartOf="@+id/txt_Time"
@@ -70,8 +86,9 @@
         android:id="@+id/btn_Time"
         android:layout_width="wrap_content"
         android:layout_height="45dp"
-        android:text="Time"
+        android:text="زمان"
         android:textAllCaps="false"
+        android:fontFamily="@font/iran_sans_mobile"
         app:layout_constraintBottom_toTopOf="@+id/btn_Date"
         app:layout_constraintEnd_toEndOf="@+id/btn_Date"
         app:layout_constraintStart_toStartOf="@+id/btn_Date" />
@@ -80,8 +97,9 @@
         android:layout_width="wrap_content"
         android:layout_height="45dp"
         android:layout_marginBottom="10dp"
-        android:text="Date"
+        android:text="تاریخ"
         android:textAllCaps="false"
+        android:fontFamily="@font/iran_sans_mobile"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.11"
@@ -94,7 +112,7 @@
 
 
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
+    x<com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btnSubmit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

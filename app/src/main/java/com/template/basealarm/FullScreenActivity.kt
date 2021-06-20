@@ -17,13 +17,6 @@ class FullScreenActivity : AppCompatActivity() {
 
         val win = window
         win.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED)
-        // Turn on the screen unless we are being launched from the
-        // AlarmAlert
-        // subclass as a result of the screen turning off.
-        // Turn on the screen unless we are being launched from the
-        // AlarmAlert
-        // subclass as a result of the screen turning off.
-
         if (!intent.getBooleanExtra(
               SCREEN_OFF,
                 false

@@ -17,7 +17,7 @@
         <ir.hamsaa.persiandatepicker.view.PersianNumberPicker
             android:id="@+id/yearNumberPicker"
             android:layout_width="0dp"
-
+            android:theme="@style/AppTheme"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
             android:layout_marginLeft="4dp"
@@ -29,6 +29,7 @@
         <ir.hamsaa.persiandatepicker.view.PersianNumberPicker
             android:id="@+id/monthNumberPicker"
             android:layout_width="0dp"
+            android:theme="@style/AppTheme"
             android:layout_height="wrap_content"
             android:layout_marginLeft="2dp"
             android:layout_marginRight="2dp"
@@ -42,6 +43,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="2dp"
             android:layout_marginLeft="2dp"
+            android:theme="@style/AppTheme"
             android:layout_marginEnd="4dp"
             android:layout_marginRight="4dp"
             android:layout_weight="1"
@@ -53,6 +55,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        android:textColor="#fff"
         android:visibility="gone" />
 
 </LinearLayout>

@@ -9,9 +9,6 @@ import com.template.basealarm.FullScreenActivity
 import com.template.basealarm.MainActivity
 
 class SwipeListener constructor(view: View,var activity: FullScreenActivity,context: Context) : View.OnTouchListener {
-
-
-
     lateinit var gestureDetector: GestureDetector
 
 

@@ -4,7 +4,7 @@
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
-	android:background="#80FF5722"
+	android:background="@color/purple_200"
 	tools:parentTag="android.widget.FrameLayout"
 	>
 
@@ -18,7 +18,7 @@
 		android:fontFamily="@font/iran_sans_mobile"
 		android:gravity="center"
 		android:singleLine="true"
-		android:textColor="?cmtpTextColor"
+		android:textColor="#fff"
 		android:textSize="?cmtpTextSize"
 		android:theme="@style/CmtpViewTheme"
 		tools:text="99"
